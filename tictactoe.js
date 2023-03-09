@@ -35,6 +35,7 @@ const gameBoardModule = ()=>{
     const columns = 3;
     const board =[];
 
+
     for (let i=0; i<rows; i++){
         board[i]=[]
         for (let j=0; j<columns;j++){
@@ -50,18 +51,30 @@ const gameBoardModule = ()=>{
     }
 
     const checkWin =(row, column, player)=>{
+
+        // Check Horizontal Win
         if (board[row][0].getSymbol()==board[row][1].getSymbol() 
         && board[row][1].getSymbol()==board[row][2].getSymbol() 
         && board[row][2].getSymbol()==player.symbol){
             console.log(`Horizontal win by ${player.name}`)
-            return {rows: [row], columns:[0,1,2]}
-            // return true
+            // return {rows: [row], columns:[0,1,2]}
+            return [`(${row},0)`,`(${row},1)`,`(${row},2)`]
+        // Check Vertical Win
         } else if (board[0][column].getSymbol()==board[1][column].getSymbol() 
         && board[1][column].getSymbol()==board[2][column].getSymbol() 
         && board[2][column].getSymbol()==player.symbol){
             console.log(`Vertical win by ${player.name}`)
-            return {rows: [0,1,2], columns:[column]}
-        }else {
+            return [`(0,${column})`,`(1,${column})`,`(2,${column})`]
+        // Check Diagonal Win - only check if row == column or row+column = 2
+        } else if (board[0][0].getSymbol()==board[1][1].getSymbol()
+            && board[1][1].getSymbol()==board[2][2].getSymbol()
+            && board[2][2].getSymbol()==player.symbol){
+            return ["(2,2)","(1,1)","(0,0)"]
+        } else if(board[2][0].getSymbol()==board[1][1].getSymbol()
+            && board[1][1].getSymbol()==board[0][2].getSymbol()
+            && board[0][2].getSymbol()==player.symbol){
+                return ["(0,2)","(1,1)","(2,0)"]
+        } else {
             return false
         }
     }
@@ -103,14 +116,18 @@ const gameControllerModule = (playerOne=null, playerTwo=null)=>{
             winCoords=winStatus
             // console.log(winCoords)
             switchCurrentStatus();
-            return 
+            return true 
+        } else{
+            return false
         }
     }
 
     const playerAction=(row, column)=>{
         console.log(`${getCurrentPlayerName()} (${getCurrentPlayerSymbol()}) just played (${row}, ${column})`)
         board.addSymbol(row, column, getCurrentPlayerSymbol())
-        checkAndHandleWin();
+        if (!checkAndHandleWin()){
+            switchPlayerTurn()
+        };
 
         // gameboard = board.getBoard()
         // if (gameboard[row][0].getSymbol()==gameboard[row][1].getSymbol() 
@@ -122,7 +139,6 @@ const gameControllerModule = (playerOne=null, playerTwo=null)=>{
         // check all cells in row, and all cells in column -> if all are filled with same symbol, then win
 
         // check if all cells have been occupied -> draw 
-        switchPlayerTurn()
 
     }
 
@@ -187,9 +203,9 @@ const screenControllerModule = (()=>{
     const updateAction = (player, status)=>{
         console.log(status)
         if (status=="playerTurn"){
-            actionDiv.textContent = `${player}'s turn...`
+            actionDiv.textContent = `${player.name}'s turn...`
         } else if (status =="gameOver"){
-            actionDiv.textContent = `${player} won!`
+            actionDiv.textContent = `${player.name} (${player.symbol}) won!`
         }
     }
 
@@ -200,7 +216,7 @@ const screenControllerModule = (()=>{
         // console.log(board)
         if (game.getCurrentStatus()=="gameOver"){
             winCoords = game.getWinCoords()
-            // console.log(winCoords)
+            console.log(winCoords)
         }
         board.forEach((row, rowIndex)=>{
             const rowDiv = document.createElement("div")
@@ -213,12 +229,12 @@ const screenControllerModule = (()=>{
                 cellButton.textContent=cell.getSymbol();
                 rowDiv.appendChild(cellButton)
                 if (typeof(winCoords) !== 'undefined'){
-                    if((winCoords.rows).includes(rowIndex) && (winCoords.columns).includes(columnIndex)){
+                    // console.log(winCoords)
+                    if((winCoords).includes(`(${rowIndex},${columnIndex})`)){
                         cellButton.classList.add("winCell")
                     } else{
                         cellButton.classList.add("cell")
                     }
-                    console.log(winCoords)
                 } else{
                     cellButton.classList.add("cell")
                 }
@@ -237,7 +253,7 @@ const screenControllerModule = (()=>{
 
     // update both action words and board when player makes a turn ie clicks
     const updateScreen =()=>{
-        updateAction(game.getCurrentPlayerName(), game.getCurrentStatus())
+        updateAction(game.getCurrentPlayer(), game.getCurrentStatus())
         updateBoard()
     }
 
