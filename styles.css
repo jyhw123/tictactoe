@@ -1,0 +1,51 @@
+body{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    font-size: 20px;
+
+}
+
+.Box{
+    background-color: beige;
+    width: 100px;
+    height: 100px;
+    border: 3px solid bisque;
+}
+
+.outerBox {
+    display: flex;
+}
+
+#startGameButton{
+    padding: 5px 10px;
+    margin: 15px;
+}
+
+.winCell{
+    background-color: aquamarine;
+    width: 100px;
+    height: 100px;
+    border: 3px solid bisque;
+    cursor: pointer;
+    font-size: 100px;
+    text-align: center;
+}
+.cell{
+    background-color: beige;
+    width: 100px;
+    height: 100px;
+    border: 3px solid bisque;
+    cursor: pointer;
+    font-size: 100px;
+    text-align: center;
+}
+
+
+.rowDiv{
+    height:100.33px
+}
