@@ -7,7 +7,9 @@ body{
 
 .title {
     font-size: 20px;
-
+    margin-bottom: 0px;
+    background-color: bisque;
+    padding: 10px;
 }
 
 .Box{
@@ -22,8 +24,10 @@ body{
 }
 
 #startGameButton{
-    padding: 5px 10px;
+    padding: 5px 15px;
     margin: 15px;
+    border-radius: 5px;
+    border-color: grey;
 }
 
 .winCell{
@@ -43,9 +47,16 @@ body{
     cursor: pointer;
     font-size: 100px;
     text-align: center;
+    color: rgb(244, 186, 115);
 }
-
 
 .rowDiv{
     height:100.33px
+}
+
+.action{
+    font-size: 30px;
+    font-weight: 500;
+    color: rgb(244, 186, 115);
+
 }

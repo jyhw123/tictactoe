@@ -47,7 +47,15 @@ const gameBoardModule = ()=>{
 
     const addSymbol = (row, column, playerSymbol) => {
         // check if cell is empty frist 
-        board[row][column].getSymbol()=="" ? board[row][column].addSymbol(playerSymbol): console.log("Cant make move here!")
+        if (board[row][column].getSymbol()==""){
+            board[row][column].addSymbol(playerSymbol);
+            return true
+        } else{
+            console.log("Cant make move here!")
+            return false
+        }
+
+        // board[row][column].getSymbol()=="" ? board[row][column].addSymbol(playerSymbol): console.log("Cant make move here!")
     }
 
     const checkWin =(row, column, player)=>{
@@ -124,10 +132,19 @@ const gameControllerModule = (playerOne=null, playerTwo=null)=>{
 
     const playerAction=(row, column)=>{
         console.log(`${getCurrentPlayerName()} (${getCurrentPlayerSymbol()}) just played (${row}, ${column})`)
-        board.addSymbol(row, column, getCurrentPlayerSymbol())
-        if (!checkAndHandleWin()){
-            switchPlayerTurn()
+        
+
+        if (board.addSymbol(row, column, getCurrentPlayerSymbol())){ // returns true if valid move made
+            if (!checkAndHandleWin()){ // returns true if no win yet
+                switchPlayerTurn()
+            }
         };
+
+        // if (!checkAndHandleWin()){ // returns true if no win yet
+        //     if (board.addSymbol(row, column, getCurrentPlayerSymbol())){
+        //         switchPlayerTurn()
+        //     }
+        // };
 
         // gameboard = board.getBoard()
         // if (gameboard[row][0].getSymbol()==gameboard[row][1].getSymbol() 
@@ -203,7 +220,7 @@ const screenControllerModule = (()=>{
     const updateAction = (player, status)=>{
         console.log(status)
         if (status=="playerTurn"){
-            actionDiv.textContent = `${player.name}'s turn...`
+            actionDiv.textContent = `${player.name}'s (${player.symbol}) turn...`
         } else if (status =="gameOver"){
             actionDiv.textContent = `${player.name} (${player.symbol}) won!`
         }
